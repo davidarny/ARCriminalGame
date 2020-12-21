@@ -18,7 +18,7 @@ public class GameController : MonoBehaviour
     public GameObject blood;
     public GameObject knife;
     public GameObject bullet;
-    public GameObject footprint;
+    public GameObject footprints;
     public GameObject fingerprint;
     public GameObject body;
     public GameObject hair;
@@ -106,7 +106,7 @@ public class GameController : MonoBehaviour
 
     public void OnFootprintSelect()
     {
-        HandleSelect(() => current = footprint);
+        HandleSelect(() => current = footprints);
     }
 
     public void OnBodySelect()
