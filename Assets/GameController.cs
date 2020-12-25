@@ -6,23 +6,33 @@ using UnityEngine.XR.ARSubsystems;
 using Lean.Touch;
 using UnityEngine.EventSystems;
 using UnityEngine.UI;
+using Photon.Pun;
 
 public class GameController : MonoBehaviour
 {
     private static readonly string GAME_MODEL_TAG = "GameModel";
     private static readonly string MODEL_SELECTION_TAG = "ModelSelection";
 
-    public TrackableType trackable;
+    [SerializeField]
+    private TrackableType trackable;
 
-    public GameObject gun;
-    public GameObject blood;
-    public GameObject knife;
-    public GameObject bullet;
-    public GameObject footprints;
-    public GameObject fingerprint;
-    public GameObject body;
-    public GameObject hair;
 
+    [SerializeField]
+    private GameObject gun;
+    [SerializeField]
+    private GameObject blood;
+    [SerializeField]
+    private GameObject knife;
+    [SerializeField]
+    private GameObject bullet;
+    [SerializeField]
+    private GameObject footprints;
+    [SerializeField]
+    private GameObject fingerprint;
+    [SerializeField]
+    private GameObject body;
+    [SerializeField]
+    private GameObject hair;
 
     private GameObject current = null;
 
@@ -48,8 +58,7 @@ public class GameController : MonoBehaviour
                 return;
             }
 
-            var spawned = Instantiate(current, pose.position, pose.rotation);
-            spawned.SetActive(true);
+            PhotonNetwork.Instantiate(current.name, pose.position, pose.rotation);
         }
     }
 
