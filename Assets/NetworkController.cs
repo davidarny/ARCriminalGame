@@ -1,4 +1,6 @@
 ﻿using UnityEngine;
+using UnityEngine.UI;
+using Lean.Gui;
 using Photon.Pun;
 using Photon.Realtime;
 
@@ -12,10 +14,21 @@ public class NetworkController : MonoBehaviourPunCallbacks
     [SerializeField]
     private byte maxPlayers = 4;
 
+
+    [SerializeField]
+    private string playNowText = "Play Now";
+    [SerializeField]
+    private Color playNowActiveColor;
+    [SerializeField]
+    private Color playNowInactiveColor;
+
     [SerializeField]
     private GameObject lobbyCanvas;
     [SerializeField]
     private GameObject roomCanvas;
+
+    [SerializeField]
+    private GameObject playNowButton;
 
     void Awake()
     {
@@ -24,15 +37,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     void Start()
     {
-        // if (PhotonNetwork.IsConnected)
-        // {
-        //     PhotonNetwork.JoinRandomRoom();
-        // }
-        // else
-        // {
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.GameVersion = gameVersion;
-        // }
+
+        SetPlayNowButtonColor(playNowInactiveColor);
     }
 
     public void OnClickPlay()
@@ -74,6 +82,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public override void OnConnectedToMaster()
     {
+        SetPlayNowButtonActive();
+        SetPlayNowButtonColor(playNowActiveColor);
+
         Debug.Log("PUN: OnConnectedToMaster() was called by PUN");
     }
 
@@ -81,5 +92,23 @@ public class NetworkController : MonoBehaviourPunCallbacks
     public override void OnDisconnected(DisconnectCause cause)
     {
         Debug.LogFormat("PUN: OnDisconnected() was called by PUN with reason {0}", cause);
+    }
+
+    private void SetPlayNowButtonActive()
+    {
+        var leanButton = playNowButton.GetComponent<LeanButton>();
+        leanButton.interactable = true;
+
+        var buttonCap = playNowButton.transform.GetChild(1).gameObject.transform.GetChild(0).gameObject;
+        var capText = buttonCap.GetComponent<Text>();
+        capText.text = playNowText;
+    }
+
+    private void SetPlayNowButtonColor(Color color)
+    {
+        var leanButton = playNowButton.GetComponent<LeanButton>();
+        var buttonCap = playNowButton.transform.GetChild(1).gameObject;
+        var capImage = buttonCap.GetComponent<Image>();
+        capImage.color = color;
     }
 }

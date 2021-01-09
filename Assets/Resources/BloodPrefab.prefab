@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: 8963163896886782531}
   - component: {fileID: 4586669442645049865}
   - component: {fileID: -5930248928002688309}
+  - component: {fileID: -4463290252935035795}
   m_Layer: 0
   m_Name: BloodPrefab
   m_TagString: GameModel
@@ -2268,6 +2269,19 @@ MonoBehaviour:
     - {x: 0.60204494, y: 0.535232, z: 0.59251034}
     - {x: -0.60204494, y: 0.535232, z: 0.59251034}
     - {x: 0.6557304, y: 0.5652775, z: 0.50047857}
+--- !u!114 &-4463290252935035795
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4281653993631363951}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30f3ae218ff1a1e42820888c56fa7db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHidden: 0
 --- !u!1001 &4281653994073512324
 PrefabInstance:
   m_ObjectHideFlags: 0

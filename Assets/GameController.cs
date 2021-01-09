@@ -1,11 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Lean.Touch;
 using UnityEngine.EventSystems;
 using Photon.Pun;
+
+public class FlashlightToggledEvent : UnityEvent<FlashState> { }
+public class GameStateToggledEvent : UnityEvent<GameState> { }
 
 public class GameController : MonoBehaviour
 {
@@ -15,6 +19,11 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private TrackableType trackable;
 
+    private GameState gameState = GameState.Preparing;
+    private FlashState flashState = FlashState.Off;
+
+    public FlashlightToggledEvent flashlightToggleEvent { get; private set; } = new FlashlightToggledEvent();
+    public GameStateToggledEvent gameStateToggledEvent { get; private set; } = new GameStateToggledEvent();
 
     [SerializeField]
     private GameObject gun;
@@ -35,6 +44,12 @@ public class GameController : MonoBehaviour
 
     private GameObject objectToSpawn = null;
     private GameObject selectedObject = null;
+    private HashSet<GameObject> hiddenObjects = new HashSet<GameObject>();
+
+    [SerializeField]
+    private GameObject playButton;
+    [SerializeField]
+    private GameObject flashButton;
 
     private ARSessionOrigin arSessionOrigin;
     private ARRaycastManager arRaycastManager;
@@ -47,6 +62,11 @@ public class GameController : MonoBehaviour
 
     public void OnFingerTap(LeanFinger finger)
     {
+        if (gameState == GameState.Playing)
+        {
+            return;
+        }
+
         var hits = new List<ARRaycastHit>();
         if (arRaycastManager.Raycast(finger.ScreenPosition, hits, trackable))
         {
@@ -64,6 +84,68 @@ public class GameController : MonoBehaviour
             selectionController.leanSelectedEvent.AddListener(OnSelectObject);
             selectionController.leanDeselectedEvent.AddListener(OnDeselectObject);
         }
+    }
+
+    private void ToggleHideableGameObject(GameObject gameObject, bool hide)
+    {
+        var hideableDecorator = gameObject.GetComponent<HideableDecorator>();
+        if (hideableDecorator.isHideable)
+        {
+            hideableDecorator.isHidden = hide;
+            gameObject.SetActive(!hide);
+
+            if (hide)
+            {
+                hiddenObjects.Add(gameObject);
+            }
+            else
+            {
+                hiddenObjects.Remove(gameObject);
+            }
+        }
+    }
+
+    private void ToggleHideableGameObjects(bool hide)
+    {
+        var allGameObjects = new List<GameObject>();
+
+        allGameObjects.AddRange(GameObject.FindGameObjectsWithTag(GAME_OBJECT_TAG));
+        allGameObjects.AddRange(hiddenObjects);
+
+        foreach (var gameObject in allGameObjects.ToArray())
+        {
+            ToggleHideableGameObject(gameObject, hide);
+        }
+    }
+
+    public void OnGameReadyTap()
+    {
+        gameState = GameState.Playing;
+
+        gameStateToggledEvent.Invoke(gameState);
+
+        playButton.SetActive(false);
+        flashButton.SetActive(true);
+
+        ToggleHideableGameObjects(true);
+    }
+
+    public void OnFlashlightTap()
+    {
+        switch (flashState)
+        {
+            case FlashState.Off:
+                flashState = FlashState.On;
+                break;
+            case FlashState.On:
+            default:
+                flashState = FlashState.Off;
+                break;
+        }
+
+        flashlightToggleEvent.Invoke(flashState);
+
+        ToggleHideableGameObjects(!FlashlightUtils.FlashStateToBool(flashState));
     }
 
     private void OnSelectObject(LeanFinger finger)

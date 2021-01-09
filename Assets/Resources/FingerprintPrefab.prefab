@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: -6795666476258992070}
   - component: {fileID: -1829095690750626687}
   - component: {fileID: -7996025918803470149}
+  - component: {fileID: 8931957245813198260}
   m_Layer: 0
   m_Name: FingerprintPrefab
   m_TagString: GameModel
@@ -2268,6 +2269,20 @@ MonoBehaviour:
     - {x: 0.60204494, y: 0.535232, z: 0.59251034}
     - {x: -0.60204494, y: 0.535232, z: 0.59251034}
     - {x: 0.6557304, y: 0.5652775, z: 0.50047857}
+--- !u!114 &8931957245813198260
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4316739765286826822}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30f3ae218ff1a1e42820888c56fa7db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHidden: 0
+  isHideable: 1
 --- !u!1001 &4316739765705502913
 PrefabInstance:
   m_ObjectHideFlags: 0

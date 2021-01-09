@@ -18,6 +18,7 @@ GameObject:
   - component: {fileID: -4121697893519955914}
   - component: {fileID: 7793862221096270137}
   - component: {fileID: -8719856037551427712}
+  - component: {fileID: -4086995203113795453}
   m_Layer: 0
   m_Name: KnifePrefab
   m_TagString: GameModel
@@ -2268,6 +2269,19 @@ MonoBehaviour:
     - {x: 0.60204494, y: 0.535232, z: 0.59251034}
     - {x: -0.60204494, y: 0.535232, z: 0.59251034}
     - {x: 0.6557304, y: 0.5652775, z: 0.50047857}
+--- !u!114 &-4086995203113795453
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1583321959446519727}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 30f3ae218ff1a1e42820888c56fa7db0, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  isHidden: 0
 --- !u!1001 &6709474534554000424
 PrefabInstance:
   m_ObjectHideFlags: 0
