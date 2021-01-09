@@ -5,13 +5,12 @@ using UnityEngine.XR.ARFoundation;
 using UnityEngine.XR.ARSubsystems;
 using Lean.Touch;
 using UnityEngine.EventSystems;
-using UnityEngine.UI;
 using Photon.Pun;
 
 public class GameController : MonoBehaviour
 {
-    private static readonly string GAME_MODEL_TAG = "GameModel";
-    private static readonly string MODEL_SELECTION_TAG = "ModelSelection";
+    private static readonly string GAME_OBJECT_TAG = "GameModel";
+    private static readonly string OBJECT_SELECTION_TAG = "ModelSelection";
 
     [SerializeField]
     private TrackableType trackable;
@@ -34,7 +33,8 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject hair;
 
-    private GameObject current = null;
+    private GameObject objectToSpawn = null;
+    private GameObject selectedObject = null;
 
     private ARSessionOrigin arSessionOrigin;
     private ARRaycastManager arRaycastManager;
@@ -53,22 +53,46 @@ public class GameController : MonoBehaviour
             var pose = hits[0].pose;
 
             RaycastHit hit;
-            if (Physics.Raycast(finger.GetRay(), out hit) && hit.collider.CompareTag(GAME_MODEL_TAG))
+            if (Physics.Raycast(finger.GetRay(), out hit) && hit.collider.CompareTag(GAME_OBJECT_TAG))
             {
                 return;
             }
 
-            PhotonNetwork.Instantiate(current.name, pose.position, pose.rotation);
+            var photonGameObject = PhotonNetwork.Instantiate(objectToSpawn.name, pose.position, pose.rotation);
+
+            var selectionController = photonGameObject.GetComponent<SelectionController>();
+            selectionController.leanSelectedEvent.AddListener(OnSelectObject);
+            selectionController.leanDeselectedEvent.AddListener(OnDeselectObject);
         }
     }
 
-    private void HideAllOutlines()
+    private void OnSelectObject(LeanFinger finger)
     {
-        var items = GameObject.FindGameObjectsWithTag(MODEL_SELECTION_TAG);
+        RaycastHit hit;
+        if (Physics.Raycast(finger.GetRay(), out hit) && hit.collider.CompareTag(GAME_OBJECT_TAG))
+        {
+            var gameObject = hit.collider.gameObject;
+            var outline = gameObject.GetComponent<Outline>();
+            outline.OutlineMode = Outline.Mode.OutlineAll;
+            selectedObject = gameObject;
+        }
+    }
+
+    private void OnDeselectObject()
+    {
+        var outline = selectedObject.GetComponent<Outline>();
+        outline.OutlineMode = Outline.Mode.OutlineHidden;
+        selectedObject = null;
+    }
+
+
+    private void HideMenuAllItemsOutlines()
+    {
+        var items = GameObject.FindGameObjectsWithTag(OBJECT_SELECTION_TAG);
 
         foreach (var item in items)
         {
-            var outline = item.GetComponentInChildren<Outline>();
+            var outline = item.GetComponentInChildren<UnityEngine.UI.Outline>();
             if (outline != null)
             {
                 outline.enabled = false;
@@ -76,60 +100,59 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void ShowCurrentOutline()
+    private void ShowMenuCurrentItemOutline()
     {
         var current = EventSystem.current.currentSelectedGameObject;
-        var outline = current.GetComponentInChildren<Outline>();
+        var outline = current.GetComponentInChildren<UnityEngine.UI.Outline>();
         if (outline != null)
         {
             outline.enabled = true;
         }
     }
-
-    private void HandleSelect(Action action)
+    private void HandleSelectMenuItem(Action action)
     {
-        HideAllOutlines();
-        ShowCurrentOutline();
+        HideMenuAllItemsOutlines();
+        ShowMenuCurrentItemOutline();
         action.Invoke();
     }
 
     public void OnGunSelect()
     {
-        HandleSelect(() => current = gun);
+        HandleSelectMenuItem(() => objectToSpawn = gun);
     }
 
     public void OnBloodSelect()
     {
-        HandleSelect(() => current = blood);
+        HandleSelectMenuItem(() => objectToSpawn = blood);
     }
 
     public void OnKnifeSelect()
     {
-        HandleSelect(() => current = knife);
+        HandleSelectMenuItem(() => objectToSpawn = knife);
     }
 
     public void OnBulletSelect()
     {
-        HandleSelect(() => current = bullet);
+        HandleSelectMenuItem(() => objectToSpawn = bullet);
     }
 
     public void OnFootprintSelect()
     {
-        HandleSelect(() => current = footprints);
+        HandleSelectMenuItem(() => objectToSpawn = footprints);
     }
 
     public void OnBodySelect()
     {
-        HandleSelect(() => current = body);
+        HandleSelectMenuItem(() => objectToSpawn = body);
     }
 
     public void OnFingerprintSelect()
     {
-        HandleSelect(() => current = fingerprint);
+        HandleSelectMenuItem(() => objectToSpawn = fingerprint);
     }
 
     public void OnHairSelect()
     {
-        HandleSelect(() => current = hair);
+        HandleSelectMenuItem(() => objectToSpawn = hair);
     }
 }

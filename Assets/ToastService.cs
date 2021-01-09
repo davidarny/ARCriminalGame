@@ -18,6 +18,7 @@ public class ToastService : MonoBehaviour
     /// <param name="message">Message string to show in the toast.</param>
     private void ShowAndroidToastMessage(string message, string stacktrace, LogType type)
     {
+#if (UNITY_ANDROID || !UNITY_EDITOR)
         var player = new AndroidJavaClass("com.unity3d.player.UnityPlayer");
         var activity = player.GetStatic<AndroidJavaObject>("currentActivity");
 
@@ -30,5 +31,6 @@ public class ToastService : MonoBehaviour
                 toastObject.Call("show");
             }));
         }
+#endif
     }
 }
