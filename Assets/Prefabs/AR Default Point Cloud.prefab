@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 8849282097705087545}
   - component: {fileID: 2763026522793292489}
   m_Layer: 0
-  m_Name: AR Default Point Cloud
+  m_Name: AR Default Point Cloud 2
   m_TagString: Untagged
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
@@ -78,8 +78,8 @@ ParticleSystemRenderer:
   m_RenderingLayerMask: 1
   m_RendererPriority: 0
   m_Materials:
-  - {fileID: 10301, guid: 0000000000000000f000000000000000, type: 0}
-  - {fileID: 0}
+  - {fileID: 2100000, guid: 404fe0d1994e54b2aa3c573975e2ab58, type: 2}
+  - {fileID: 2100000, guid: 404fe0d1994e54b2aa3c573975e2ab58, type: 2}
   m_StaticBatchInfo:
     firstSubMesh: 0
     subMeshCount: 0
@@ -313,7 +313,7 @@ ParticleSystem:
       serializedVersion: 2
       minMaxState: 0
       minColor: {r: 1, g: 1, b: 1, a: 1}
-      maxColor: {r: 0.99215686, g: 0.72156864, b: 0.07450981, a: 1}
+      maxColor: {r: 1, g: 1, b: 1, a: 1}
       maxGradient:
         serializedVersion: 2
         key0: {r: 1, g: 1, b: 1, a: 1}
