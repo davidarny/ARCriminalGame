@@ -5,7 +5,6 @@ using System;
 
 [Serializable]
 public class LeanSelectedEvent : UnityEvent<LeanFinger> { }
-
 [Serializable]
 public class LeanDeselectedEvent : UnityEvent { }
 

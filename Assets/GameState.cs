@@ -1,5 +1,6 @@
 ﻿public enum GameState
 {
     Preparing = 0,
-    Playing
+    Playing,
+    Finishing,
 }

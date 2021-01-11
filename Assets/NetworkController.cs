@@ -1,8 +1,13 @@
-﻿using UnityEngine;
+﻿using System;
+using UnityEngine;
+using UnityEngine.Events;
 using UnityEngine.UI;
 using Lean.Gui;
 using Photon.Pun;
 using Photon.Realtime;
+
+[Serializable]
+public class LeftRoomEvent : UnityEvent { }
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
@@ -30,6 +35,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
     [SerializeField]
     private GameObject playNowButton;
 
+    public LeftRoomEvent leftRoomEvent { get; private set; } = new LeftRoomEvent();
+
+
     void Awake()
     {
         PhotonNetwork.AutomaticallySyncScene = true;
@@ -39,6 +47,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         PhotonNetwork.ConnectUsingSettings();
         PhotonNetwork.GameVersion = gameVersion;
+
+        var gameController = GameObject.FindObjectOfType<GameController>();
+        gameController.gameStateToggledEvent.AddListener(OnFinishGame);
 
         SetPlayNowButtonColor(playNowInactiveColor);
     }
@@ -57,6 +68,21 @@ public class NetworkController : MonoBehaviourPunCallbacks
         PhotonNetwork.JoinOrCreateRoom(roomName, options, TypedLobby.Default);
     }
 
+    private void OnFinishGame(GameState gameState)
+    {
+        if (gameState != GameState.Finishing)
+        {
+            return;
+        }
+
+        lobbyCanvas.SetActive(true);
+        roomCanvas.SetActive(false);
+
+        PhotonNetwork.LeaveRoom();
+
+        leftRoomEvent.Invoke();
+    }
+
     public override void OnCreatedRoom()
     {
         lobbyCanvas.SetActive(false);
@@ -71,13 +97,17 @@ public class NetworkController : MonoBehaviourPunCallbacks
         Debug.LogFormat("PUN: OnJoinedRoom() was called by PUN with room {0}", PhotonNetwork.CurrentRoom.ToString());
     }
 
+    public override void OnLeftRoom()
+    {
+
+    }
+
     public override void OnCreateRoomFailed(short returnCode, string message)
     {
         lobbyCanvas.SetActive(true);
         roomCanvas.SetActive(false);
 
         Debug.LogFormat("PUN: OnCreateRoomFailed() was called by PUN with reason {0}", message);
-
     }
 
     public override void OnConnectedToMaster()

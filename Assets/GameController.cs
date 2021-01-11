@@ -8,7 +8,9 @@ using Lean.Touch;
 using UnityEngine.EventSystems;
 using Photon.Pun;
 
+[Serializable]
 public class FlashlightToggledEvent : UnityEvent<FlashState> { }
+[Serializable]
 public class GameStateToggledEvent : UnityEvent<GameState> { }
 
 public class GameController : MonoBehaviour
@@ -50,6 +52,10 @@ public class GameController : MonoBehaviour
     private GameObject playButton;
     [SerializeField]
     private GameObject flashButton;
+    [SerializeField]
+    private GameObject finishButton;
+    [SerializeField]
+    private GameObject objectModalButton;
 
     private ARSessionOrigin arSessionOrigin;
     private ARRaycastManager arRaycastManager;
@@ -58,6 +64,12 @@ public class GameController : MonoBehaviour
     {
         arSessionOrigin = FindObjectOfType<ARSessionOrigin>();
         arRaycastManager = arSessionOrigin.GetComponent<ARRaycastManager>();
+    }
+
+    void Start()
+    {
+        var networkController = GameObject.FindObjectOfType<NetworkController>();
+        networkController.leftRoomEvent.AddListener(OnLeftRoom);
     }
 
     public void OnFingerTap(LeanFinger finger)
@@ -121,13 +133,50 @@ public class GameController : MonoBehaviour
     public void OnGameReadyTap()
     {
         gameState = GameState.Playing;
-
         gameStateToggledEvent.Invoke(gameState);
 
         playButton.SetActive(false);
         flashButton.SetActive(true);
+        finishButton.SetActive(true);
+        objectModalButton.SetActive(false);
+
+        HideSelectionOutlines();
 
         ToggleHideableGameObjects(true);
+    }
+
+    public void OnFinishTap()
+    {
+        var gameObjects = GameObject.FindGameObjectsWithTag(GAME_OBJECT_TAG);
+        foreach (var gameObject in gameObjects)
+        {
+            var photonView = gameObject.GetComponent<PhotonView>();
+            if (photonView.IsMine)
+            {
+                PhotonNetwork.Destroy(photonView);
+            }
+            else
+            {
+                gameObject.SetActive(false);
+                Destroy(gameObject, 1f);
+            }
+        }
+
+        gameState = GameState.Finishing;
+        gameStateToggledEvent.Invoke(gameState);
+        flashState = FlashState.Off;
+        flashlightToggleEvent.Invoke(flashState);
+    }
+
+    private void OnLeftRoom()
+    {
+        playButton.SetActive(true);
+        flashButton.SetActive(false);
+        finishButton.SetActive(false);
+        objectModalButton.SetActive(true);
+
+        gameState = GameState.Preparing;
+        gameStateToggledEvent.Invoke(gameState);
     }
 
     public void OnFlashlightTap()
@@ -167,8 +216,7 @@ public class GameController : MonoBehaviour
         selectedObject = null;
     }
 
-
-    private void HideMenuAllItemsOutlines()
+    private void HideSelectionOutlines()
     {
         var items = GameObject.FindGameObjectsWithTag(OBJECT_SELECTION_TAG);
 
@@ -182,7 +230,7 @@ public class GameController : MonoBehaviour
         }
     }
 
-    private void ShowMenuCurrentItemOutline()
+    private void ShowSelectionOutline()
     {
         var current = EventSystem.current.currentSelectedGameObject;
         var outline = current.GetComponentInChildren<UnityEngine.UI.Outline>();
@@ -193,8 +241,8 @@ public class GameController : MonoBehaviour
     }
     private void HandleSelectMenuItem(Action action)
     {
-        HideMenuAllItemsOutlines();
-        ShowMenuCurrentItemOutline();
+        HideSelectionOutlines();
+        ShowSelectionOutline();
         action.Invoke();
     }
 
