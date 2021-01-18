@@ -8,6 +8,8 @@ using Photon.Realtime;
 
 [Serializable]
 public class LeftRoomEvent : UnityEvent { }
+[Serializable]
+public class JoinRoomEvent : UnityEvent { }
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
@@ -21,7 +23,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
 
     [SerializeField]
-    private string playNowText = "Play Now";
+    private string playNowText;
     [SerializeField]
     private Color playNowActiveColor;
     [SerializeField]
@@ -36,6 +38,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
     private GameObject playNowButton;
 
     public LeftRoomEvent leftRoomEvent { get; private set; } = new LeftRoomEvent();
+    public JoinRoomEvent joinRoomEvent { get; private set; } = new JoinRoomEvent();
 
 
     void Awake()
@@ -85,8 +88,7 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
     public override void OnCreatedRoom()
     {
-        lobbyCanvas.SetActive(false);
-        roomCanvas.SetActive(true);
+        Debug.LogFormat("PUN: OnCreatedRoom() was called by PUN with room {0}", PhotonNetwork.CurrentRoom.ToString());
     }
 
     public override void OnJoinedRoom()
@@ -94,12 +96,14 @@ public class NetworkController : MonoBehaviourPunCallbacks
         lobbyCanvas.SetActive(false);
         roomCanvas.SetActive(true);
 
+        joinRoomEvent.Invoke();
+
         Debug.LogFormat("PUN: OnJoinedRoom() was called by PUN with room {0}", PhotonNetwork.CurrentRoom.ToString());
     }
 
     public override void OnLeftRoom()
     {
-
+        leftRoomEvent.Invoke();
     }
 
     public override void OnCreateRoomFailed(short returnCode, string message)

@@ -70,6 +70,7 @@ public class GameController : MonoBehaviour
     {
         var networkController = GameObject.FindObjectOfType<NetworkController>();
         networkController.leftRoomEvent.AddListener(OnLeftRoom);
+        networkController.joinRoomEvent.AddListener(OnJoinRoom);
     }
 
     public void OnFingerTap(LeanFinger finger)
@@ -117,6 +118,7 @@ public class GameController : MonoBehaviour
         }
     }
 
+    [PunRPC]
     private void ToggleHideableGameObjects(bool hide)
     {
         var allGameObjects = new List<GameObject>();
@@ -143,6 +145,12 @@ public class GameController : MonoBehaviour
         HideSelectionOutlines();
 
         ToggleHideableGameObjects(true);
+
+        if (PhotonNetwork.IsMasterClient)
+        {
+            var photonView = PhotonView.Get(this);
+            photonView.RPC("ToggleHideableGameObjects", RpcTarget.Others, new object[] { true });
+        }
     }
 
     public void OnFinishTap()
@@ -177,6 +185,14 @@ public class GameController : MonoBehaviour
 
         gameState = GameState.Preparing;
         gameStateToggledEvent.Invoke(gameState);
+    }
+
+    private void OnJoinRoom()
+    {
+        if (!PhotonNetwork.IsMasterClient)
+        {
+            OnGameReadyTap();
+        }
     }
 
     public void OnFlashlightTap()

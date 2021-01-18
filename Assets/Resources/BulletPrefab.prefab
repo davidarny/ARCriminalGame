@@ -2282,6 +2282,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   isHidden: 0
+  isHideable: 0
 --- !u!1001 &7987608274123886182
 PrefabInstance:
   m_ObjectHideFlags: 0

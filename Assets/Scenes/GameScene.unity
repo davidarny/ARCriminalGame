@@ -559,7 +559,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Solve Crime
+  m_Text: "\u0418\u0437\u043B\u043E\u0436\u0438\u0442\u044C \u0432\u0435\u0440\u0441\u0438\u044E"
 --- !u!222 &95373043
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -602,10 +602,10 @@ RectTransform:
   m_Father: {fileID: 1082550561}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 1, y: 0.5}
-  m_AnchorMax: {x: 1, y: 0.5}
-  m_AnchoredPosition: {x: -140, y: 0}
-  m_SizeDelta: {x: 280, y: 80}
+  m_AnchorMin: {x: 0.5, y: 0.5}
+  m_AnchorMax: {x: 0.5, y: 0.5}
+  m_AnchoredPosition: {x: 710, y: 0}
+  m_SizeDelta: {x: 360, y: 80}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &96977284
 MonoBehaviour:
@@ -1551,7 +1551,7 @@ RectTransform:
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 0.99523276, y: 1}
+  m_AnchorMax: {x: 0.99523395, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -3222,7 +3222,7 @@ Light:
   m_BounceIntensity: 1
   m_ColorTemperature: 6570
   m_UseColorTemperature: 0
-  m_BoundingSphereOverride: {x: 0, y: 0, z: 0, w: 0}
+  m_BoundingSphereOverride: {x: 4.78e-43, y: 2.5425e-41, z: 0, w: -1}
   m_UseBoundingSphereOverride: 0
   m_ShadowRadius: 0
   m_ShadowAngle: 0
@@ -3342,7 +3342,7 @@ GameObject:
   - component: {fileID: 789259123}
   - component: {fileID: 789259122}
   - component: {fileID: 789259125}
-  - component: {fileID: 789259124}
+  - component: {fileID: 789259126}
   m_Layer: 0
   m_Name: GameController
   m_TagString: Untagged
@@ -3391,19 +3391,6 @@ Transform:
   m_Father: {fileID: 0}
   m_RootOrder: 3
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
---- !u!114 &789259124
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 789259121}
-  m_Enabled: 0
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 25e6bd33cb9c48b4080b2247ab3e29e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  toggleKey: 96
 --- !u!114 &789259125
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -3416,6 +3403,28 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: b53f0e28067b48646a6b73550503c84d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &789259126
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 789259121}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: aa584fbee541324448dd18d8409c7a41, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  ObservedComponentsFoldoutOpen: 1
+  Group: 0
+  prefixField: -1
+  observableSearch: 2
+  Synchronization: 3
+  OwnershipTransfer: 0
+  ObservedComponents: []
+  viewIdField: 1
+  InstantiationId: 0
+  isRuntimeInstantiated: 0
 --- !u!1 &797709046
 GameObject:
   m_ObjectHideFlags: 0
@@ -3458,8 +3467,8 @@ RectTransform:
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
   m_AnchorMin: {x: 0, y: 0}
   m_AnchorMax: {x: 1, y: 1}
-  m_AnchoredPosition: {x: -10318, y: 0.0024414062}
-  m_SizeDelta: {x: -295, y: -295}
+  m_AnchoredPosition: {x: -10462.5, y: -0.0007324219}
+  m_SizeDelta: {x: -295.4419, y: -134.33698}
   m_Pivot: {x: 0.5, y: 0.5}
 --- !u!114 &797709048
 MonoBehaviour:
@@ -4422,8 +4431,8 @@ RectTransform:
   m_Father: {fileID: 253004036}
   m_RootOrder: 0
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
-  m_AnchorMin: {x: 0, y: 0}
-  m_AnchorMax: {x: 1, y: 0.9999959}
+  m_AnchorMin: {x: 0, y: 0.0000030398369}
+  m_AnchorMax: {x: 1, y: 1}
   m_AnchoredPosition: {x: 0, y: 0}
   m_SizeDelta: {x: 20, y: 20}
   m_Pivot: {x: 0.5, y: 0.5}
@@ -5346,8 +5355,8 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 1025519185}
   m_HandleRect: {fileID: 1025519184}
   m_Direction: 2
-  m_Value: 0
-  m_Size: 0.9999959
+  m_Value: 1
+  m_Size: 0.99999696
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5571,7 +5580,7 @@ MonoBehaviour:
   m_HandleRect: {fileID: 316611878}
   m_Direction: 0
   m_Value: 0
-  m_Size: 0.99523276
+  m_Size: 0.99523395
   m_NumberOfSteps: 0
   m_OnValueChanged:
     m_PersistentCalls:
@@ -5889,7 +5898,9 @@ MonoBehaviour:
     m_HorizontalOverflow: 0
     m_VerticalOverflow: 0
     m_LineSpacing: 1
-  m_Text: Enter crime description...
+  m_Text: "\u0412\u0432\u0435\u0434\u0438\u0442\u0435 \u043F\u0440\u0435\u0434\u043F\u043E\u043B\u0430\u0433\u0430\u0435\u043C\u043E\u0435
+    \u043E\u043F\u0438\u0441\u0430\u043D\u0438\u044F \u043C\u0435\u0441\u0442\u0430
+    \u043F\u0440\u0435\u0441\u0442\u0443\u043F\u043B\u0435\u043D\u0438\u044F..."
 --- !u!222 &1290653210
 CanvasRenderer:
   m_ObjectHideFlags: 0
@@ -7238,7 +7249,7 @@ MonoBehaviour:
   gameVersion: 1.0
   roomName: basic
   maxPlayers: 4
-  playNowText: Play Now
+  playNowText: "\u041D\u0430\u0447\u0430\u0442\u044C"
   playNowActiveColor: {r: 0.03137255, g: 0.5803922, b: 0.96862745, a: 1}
   playNowInactiveColor: {r: 0.67058825, g: 0.67058825, b: 0.67058825, a: 1}
   lobbyCanvas: {fileID: 1640932553}
@@ -8656,7 +8667,7 @@ MonoBehaviour:
     m_HorizontalOverflow: 1
     m_VerticalOverflow: 1
     m_LineSpacing: 1
-  m_Text: Loading...
+  m_Text: "\u0417\u0430\u0433\u0440\u0443\u0437\u043A\u0430..."
 --- !u!222 &1759602773
 CanvasRenderer:
   m_ObjectHideFlags: 0
