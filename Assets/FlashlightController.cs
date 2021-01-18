@@ -1,17 +1,28 @@
 ﻿using UnityEngine;
 using UnityEngine.UI;
 
-// FFE900
 public class FlashlightController : MonoBehaviour
 {
+    #region UI configuration
+
     [SerializeField]
     private Color flashInactiveColor;
     [SerializeField]
     private Color flashActiveColor;
 
+    #endregion
+
+    #region Current state
+
     private Color currentColor;
 
+    #endregion
+
+    #region UI
+
     private Image capImage;
+
+    #endregion
 
     void Awake()
     {

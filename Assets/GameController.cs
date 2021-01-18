@@ -18,14 +18,25 @@ public class GameController : MonoBehaviour
     private static readonly string GAME_OBJECT_TAG = "GameModel";
     private static readonly string OBJECT_SELECTION_TAG = "ModelSelection";
 
+    #region Configuration
+
     [SerializeField]
     private TrackableType trackable;
+    [SerializeField]
+    private string preparingStageText;
+    [SerializeField]
+    private string playingStageText;
 
-    private GameState gameState = GameState.Preparing;
-    private FlashState flashState = FlashState.Off;
+    #endregion
+
+    #region Events
 
     public FlashlightToggledEvent flashlightToggleEvent { get; private set; } = new FlashlightToggledEvent();
     public GameStateToggledEvent gameStateToggledEvent { get; private set; } = new GameStateToggledEvent();
+
+    #endregion
+
+    #region Crime objects
 
     [SerializeField]
     private GameObject gun;
@@ -44,9 +55,19 @@ public class GameController : MonoBehaviour
     [SerializeField]
     private GameObject hair;
 
+    #endregion
+
+    #region Current state
+
+    private GameState gameState = GameState.Preparing;
+    private FlashState flashState = FlashState.Off;
     private GameObject objectToSpawn = null;
     private GameObject selectedObject = null;
     private HashSet<GameObject> hiddenObjects = new HashSet<GameObject>();
+
+    #endregion
+
+    #region UI
 
     [SerializeField]
     private GameObject playButton;
@@ -56,9 +77,17 @@ public class GameController : MonoBehaviour
     private GameObject finishButton;
     [SerializeField]
     private GameObject objectModalButton;
+    [SerializeField]
+    private GameObject stageText;
+
+    #endregion
+
+    #region AR
 
     private ARSessionOrigin arSessionOrigin;
     private ARRaycastManager arRaycastManager;
+
+    #endregion
 
     void Awake()
     {
@@ -73,6 +102,7 @@ public class GameController : MonoBehaviour
         networkController.joinRoomEvent.AddListener(OnJoinRoom);
     }
 
+    #region LeanTouch callbacks
     public void OnFingerTap(LeanFinger finger)
     {
         if (gameState == GameState.Playing)
@@ -98,6 +128,10 @@ public class GameController : MonoBehaviour
             selectionController.leanDeselectedEvent.AddListener(OnDeselectObject);
         }
     }
+
+    #endregion
+
+    #region Show/hide objects
 
     private void ToggleHideableGameObject(GameObject gameObject, bool hide)
     {
@@ -132,6 +166,10 @@ public class GameController : MonoBehaviour
         }
     }
 
+    #endregion
+
+    #region Toolbar callbacks
+
     public void OnGameReadyTap()
     {
         gameState = GameState.Playing;
@@ -141,6 +179,9 @@ public class GameController : MonoBehaviour
         flashButton.SetActive(true);
         finishButton.SetActive(true);
         objectModalButton.SetActive(false);
+
+        var stageTextComp = stageText.GetComponent<UnityEngine.UI.Text>();
+        stageTextComp.text = playingStageText;
 
         HideSelectionOutlines();
 
@@ -176,12 +217,18 @@ public class GameController : MonoBehaviour
         flashlightToggleEvent.Invoke(flashState);
     }
 
+    #endregion
+
+    #region PUN connection callbacks
     private void OnLeftRoom()
     {
         playButton.SetActive(true);
         flashButton.SetActive(false);
         finishButton.SetActive(false);
         objectModalButton.SetActive(true);
+
+        var stageTextComp = stageText.GetComponent<UnityEngine.UI.Text>();
+        stageTextComp.text = preparingStageText;
 
         gameState = GameState.Preparing;
         gameStateToggledEvent.Invoke(gameState);
@@ -194,6 +241,10 @@ public class GameController : MonoBehaviour
             OnGameReadyTap();
         }
     }
+
+    #endregion
+
+    #region Flashlight callbacks
 
     public void OnFlashlightTap()
     {
@@ -213,6 +264,9 @@ public class GameController : MonoBehaviour
         ToggleHideableGameObjects(!FlashlightUtils.FlashStateToBool(flashState));
     }
 
+    #endregion
+
+    #region QuickOutline callbacks
     private void OnSelectObject(LeanFinger finger)
     {
         RaycastHit hit;
@@ -231,6 +285,10 @@ public class GameController : MonoBehaviour
         outline.OutlineMode = Outline.Mode.OutlineHidden;
         selectedObject = null;
     }
+
+    #endregion
+
+    #region UI callbacks
 
     private void HideSelectionOutlines()
     {
@@ -301,4 +359,6 @@ public class GameController : MonoBehaviour
     {
         HandleSelectMenuItem(() => objectToSpawn = hair);
     }
+
+    #endregion
 }

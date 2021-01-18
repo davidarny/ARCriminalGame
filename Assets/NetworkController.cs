@@ -13,6 +13,8 @@ public class JoinRoomEvent : UnityEvent { }
 
 public class NetworkController : MonoBehaviourPunCallbacks
 {
+    #region Photon configuration
+
     [SerializeField]
     private string gameVersion = "1.0";
 
@@ -21,6 +23,9 @@ public class NetworkController : MonoBehaviourPunCallbacks
     [SerializeField]
     private byte maxPlayers = 4;
 
+    #endregion
+
+    #region UI configuration
 
     [SerializeField]
     private string playNowText;
@@ -29,16 +34,30 @@ public class NetworkController : MonoBehaviourPunCallbacks
     [SerializeField]
     private Color playNowInactiveColor;
 
+    #endregion
+
+    #region Canvases
+
     [SerializeField]
     private GameObject lobbyCanvas;
     [SerializeField]
     private GameObject roomCanvas;
 
+    #endregion
+
+    #region UI
+
     [SerializeField]
     private GameObject playNowButton;
 
+    #endregion
+
+    #region Events
+
     public LeftRoomEvent leftRoomEvent { get; private set; } = new LeftRoomEvent();
     public JoinRoomEvent joinRoomEvent { get; private set; } = new JoinRoomEvent();
+
+    #endregion
 
 
     void Awake()
@@ -56,6 +75,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         SetPlayNowButtonColor(playNowInactiveColor);
     }
+
+    #region UI callbacks
 
     public void OnClickPlay()
     {
@@ -85,6 +106,10 @@ public class NetworkController : MonoBehaviourPunCallbacks
 
         leftRoomEvent.Invoke();
     }
+
+    #endregion
+
+    #region PUN callbacks
 
     public override void OnCreatedRoom()
     {
@@ -127,6 +152,8 @@ public class NetworkController : MonoBehaviourPunCallbacks
     {
         Debug.LogFormat("PUN: OnDisconnected() was called by PUN with reason {0}", cause);
     }
+
+    #endregion
 
     private void SetPlayNowButtonActive()
     {
