@@ -147,6 +147,15 @@ public class NetworkController : MonoBehaviourPunCallbacks
         Debug.Log("PUN: OnConnectedToMaster() was called by PUN");
     }
 
+    public void OnConnectionFail(DisconnectCause cause)
+    {
+        Debug.LogFormat("PUN: OnConnectionFail() was called by PUN with reason {0}", cause);
+    }
+
+    public void OnFailedToConnectToPhoton(DisconnectCause cause)
+    {
+        Debug.LogFormat("PUN: OnFailedToConnectToPhoton() was called by PUN with reason {0}", cause);
+    }
 
     public override void OnDisconnected(DisconnectCause cause)
     {

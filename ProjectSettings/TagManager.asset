@@ -6,6 +6,7 @@ TagManager:
   tags:
   - GameModel
   - ModelSelection
+  - SectionInfo
   layers:
   - Default
   - TransparentFX

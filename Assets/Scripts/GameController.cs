@@ -7,6 +7,7 @@ using UnityEngine.XR.ARSubsystems;
 using Lean.Touch;
 using UnityEngine.EventSystems;
 using Photon.Pun;
+using System.Linq;
 
 [Serializable]
 public class FlashlightToggledEvent : UnityEvent<FlashState> { }
@@ -17,6 +18,7 @@ public class GameController : MonoBehaviour
 {
     private static readonly string GAME_OBJECT_TAG = "GameModel";
     private static readonly string OBJECT_SELECTION_TAG = "ModelSelection";
+    private static readonly string SECTION_INFO_TAG = "SectionInfo";
 
     #region Configuration
 
@@ -110,16 +112,16 @@ public class GameController : MonoBehaviour
             return;
         }
 
+        RaycastHit hit;
+        if (Physics.Raycast(finger.GetRay(), out hit) && hit.collider.CompareTag(GAME_OBJECT_TAG))
+        {
+            return;
+        }
+
         var hits = new List<ARRaycastHit>();
         if (arRaycastManager.Raycast(finger.ScreenPosition, hits, trackable))
         {
             var pose = hits[0].pose;
-
-            RaycastHit hit;
-            if (Physics.Raycast(finger.GetRay(), out hit) && hit.collider.CompareTag(GAME_OBJECT_TAG))
-            {
-                return;
-            }
 
             var photonGameObject = PhotonNetwork.Instantiate(objectToSpawn.name, pose.position, pose.rotation);
 
@@ -133,8 +135,10 @@ public class GameController : MonoBehaviour
 
     #region Show/hide objects
 
-    private void ToggleHideableGameObject(GameObject gameObject, bool hide)
+    private void PrepareObjectForPlaying(GameObject gameObject, bool hide)
     {
+        // ----- Hide object if hideable
+
         var hideableDecorator = gameObject.GetComponent<HideableDecorator>();
         if (hideableDecorator.isHideable)
         {
@@ -150,10 +154,20 @@ public class GameController : MonoBehaviour
                 hiddenObjects.Remove(gameObject);
             }
         }
+
+        // -----
+
+        // ----- Disable translate/rotate/scale
+
+        gameObject.GetComponent<LeanDragTranslate>().enabled = false;
+        gameObject.GetComponent<LeanTwistRotate>().enabled = false;
+        gameObject.GetComponent<LeanPinchScale>().enabled = false;
+
+        // -----
     }
 
     [PunRPC]
-    private void ToggleHideableGameObjects(bool hide)
+    private void PrepareObjectsForPlaying(bool hide)
     {
         var allGameObjects = new List<GameObject>();
 
@@ -162,7 +176,7 @@ public class GameController : MonoBehaviour
 
         foreach (var gameObject in allGameObjects.ToArray())
         {
-            ToggleHideableGameObject(gameObject, hide);
+            PrepareObjectForPlaying(gameObject, hide);
         }
     }
 
@@ -185,7 +199,7 @@ public class GameController : MonoBehaviour
 
         HideSelectionOutlines();
 
-        ToggleHideableGameObjects(true);
+        PrepareObjectsForPlaying(true);
 
         if (PhotonNetwork.IsMasterClient)
         {
@@ -261,7 +275,7 @@ public class GameController : MonoBehaviour
 
         flashlightToggleEvent.Invoke(flashState);
 
-        ToggleHideableGameObjects(!FlashlightUtils.FlashStateToBool(flashState));
+        PrepareObjectsForPlaying(!FlashlightUtils.FlashStateToBool(flashState));
     }
 
     #endregion
@@ -274,8 +288,12 @@ public class GameController : MonoBehaviour
         {
             var gameObject = hit.collider.gameObject;
             var outline = gameObject.GetComponent<Outline>();
+
             outline.OutlineMode = Outline.Mode.OutlineAll;
             selectedObject = gameObject;
+
+            var sectionInfo = gameObject.FindObjectWithTag(SECTION_INFO_TAG).FirstOrDefault();
+            sectionInfo.SetActive(true);
         }
     }
 
@@ -283,6 +301,10 @@ public class GameController : MonoBehaviour
     {
         var outline = selectedObject.GetComponent<Outline>();
         outline.OutlineMode = Outline.Mode.OutlineHidden;
+
+        var sectionInfo = selectedObject.FindObjectWithTag(SECTION_INFO_TAG).FirstOrDefault();
+        sectionInfo?.SetActive(false);
+
         selectedObject = null;
     }
 
